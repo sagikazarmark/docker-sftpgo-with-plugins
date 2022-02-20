@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -e
+
+wget -O /usr/local/bin/sftpgo-plugin-$1 "https://github.com/sftpgo/sftpgo-plugin-$1/releases/download/$2/sftpgo-plugin-$1-${TARGETOS:-linux}-${TARGETARCH:-amd64}${TARGETVARIANT}"
+
+chmod +x /usr/local/bin/sftpgo-plugin-$1

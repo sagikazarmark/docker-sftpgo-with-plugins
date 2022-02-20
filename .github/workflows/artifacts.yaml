@@ -1,0 +1,75 @@
+name: Artifacts
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  docker:
+    name: Container images
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        base_image_variant:
+          - ""
+          - "slim"
+          - "alpine"
+          - "alpine-slim"
+          - "distroless"
+          - "distroless-slim"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Calculate container image details
+        id: image_details
+        env:
+          IMAGES: "ghcr.io/sagikazarmark/sftpgo-with-plugins"
+          SFTPGO_VERSION: "v2.2.2"
+        run: |
+          VERSION=${SFTPGO_VERSION}
+
+          if [[ "${{ matrix.base_image_variant }}" != "" ]]; then
+            VERSION="${VERSION}-${{ matrix.base_image_variant }}"
+          fi
+
+          TAGS=()
+          for image in $IMAGES; do
+            TAGS+=("${image}:${VERSION}")
+            TAGS+=("${image}:${VERSION}-$(date +%s)")
+          done
+
+          echo ::set-output name=tags::$(IFS=,; echo "${TAGS[*]}")
+          echo ::set-output name=build_image_tag::${VERSION}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: all
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ github.token }}
+        if: github.event_name == 'push'
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          push: ${{ github.event_name == 'push' }}
+          tags: ${{ steps.image_details.outputs.tags }}
+          build-args: |
+            BASE_IMAGE_TAG=${{ steps.image_details.outputs.build_image_tag }}
