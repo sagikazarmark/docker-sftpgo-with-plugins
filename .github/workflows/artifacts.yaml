@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  docker:
+  container-images:
     name: Container images
     runs-on: ubuntu-latest
     strategy:
