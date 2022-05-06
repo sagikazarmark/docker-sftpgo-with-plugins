@@ -46,7 +46,7 @@ jobs:
           echo ::set-output name=build_image_tag::${VERSION}
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v2
         with:
           platforms: all
 
