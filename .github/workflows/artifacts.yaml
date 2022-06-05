@@ -6,6 +6,9 @@ on:
       - main
   pull_request:
 
+env:
+  SFTPGO_VERSION: "v2.2.3"
+
 jobs:
   container-images:
     name: Container images
@@ -28,7 +31,6 @@ jobs:
         id: image_details
         env:
           IMAGES: "ghcr.io/sagikazarmark/sftpgo-with-plugins"
-          SFTPGO_VERSION: "v2.2.3"
         run: |
           VERSION=${SFTPGO_VERSION}
 
