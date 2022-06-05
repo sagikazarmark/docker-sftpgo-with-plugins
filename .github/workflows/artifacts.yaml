@@ -28,7 +28,7 @@ jobs:
         id: image_details
         env:
           IMAGES: "ghcr.io/sagikazarmark/sftpgo-with-plugins"
-          SFTPGO_VERSION: "v2.2.2"
+          SFTPGO_VERSION: "v2.2.3"
         run: |
           VERSION=${SFTPGO_VERSION}
 
