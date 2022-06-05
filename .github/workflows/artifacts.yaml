@@ -7,7 +7,7 @@ on:
   pull_request:
 
 env:
-  SFTPGO_VERSION: "v2.2.3"
+  SFTPGO_VERSION: "v2.3.0"
 
 jobs:
   container-images:
