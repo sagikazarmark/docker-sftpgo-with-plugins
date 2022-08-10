@@ -2,7 +2,7 @@ ARG BASE_IMAGE_URL=ghcr.io/drakkan/sftpgo
 ARG BASE_IMAGE_TAG=v2.3.0
 ARG BASE_IMAGE=${BASE_IMAGE_URL}:${BASE_IMAGE_TAG}
 
-FROM alpine:3.16.0 AS downloader
+FROM alpine:3.16.2 AS downloader
 
 COPY sftpgo-plugin-downloader /usr/bin
 
